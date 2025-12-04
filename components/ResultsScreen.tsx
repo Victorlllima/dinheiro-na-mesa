@@ -150,14 +150,13 @@ const ResultsScreen: React.FC<Props> = ({ data }) => {
         {/* TEXTUAL REPORT - NEW SECTION */}
         <div className="bg-slate-800 rounded-xl p-8 border border-slate-700 shadow-xl">
             <h2 className="text-2xl font-bold mb-6 text-white uppercase border-b border-slate-600 pb-4">
-                <span className="text-emerald-400">{data.user.name}</span>, QUANTO DINHEIRO VOCÊ ESTÁ DEIXANDO NA MESA?
+                QUANTO DINHEIRO VOCÊ ESTÁ DEIXANDO NA MESA?
             </h2>
 
             <div className="space-y-6 text-slate-300 leading-relaxed">
                 <p>
-                    Toda empresa tem um potencial inexplorado. E o objetivo da ferramenta DINHEIRO
-                    NA MESA é exatamente te mostrar esse potencial e as oportunidades ocultas do seu
-                    negócio, para potencializar seu faturamento, seu LUCRO e seu IMPACTO no mercado.
+                    <span className="text-emerald-400 font-medium">{data.user.name}</span>, toda empresa tem um potencial inexplorado. E o objetivo da ferramenta DINHEIRO
+                    NA MESA é exatamente te mostrar esse potencial e as oportunidades ocultas da <span className="text-emerald-400 font-medium">{data.user.company}</span>, para potencializar seu faturamento, seu LUCRO e seu IMPACTO no mercado.
                 </p>
 
                 <p>

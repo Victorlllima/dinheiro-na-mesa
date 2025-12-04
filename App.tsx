@@ -27,7 +27,7 @@ const App: React.FC = () => {
     // Show loading screen first
     setStep(AppStep.CALCULATING);
 
-    // Perform calculation after a small delay to ensure loading screen is rendered
+    // Perform calculation after 5 seconds to match loading screen duration
     setTimeout(() => {
       // Calculation Engine (Business Logic)
 
@@ -73,7 +73,7 @@ const App: React.FC = () => {
 
       setResult(calculationResult);
       setStep(AppStep.RESULTS);
-    }, 0);
+    }, 5000);
   };
 
   return (
