@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import WelcomeScreen from './components/WelcomeScreen';
 import HardDataForm from './components/HardDataForm';
 import Questionnaire from './components/Questionnaire';
+import LoadingScreen from './components/LoadingScreen';
 import ResultsScreen from './components/ResultsScreen';
 import { AppStep, HardData, CalculationResult } from './types';
 import { MAX_SCORE } from './constants';
@@ -23,50 +24,56 @@ const App: React.FC = () => {
   const handleQuestionnaireComplete = (totalScore: number) => {
     if (!hardData) return;
 
-    // Calculation Engine (Business Logic)
-    
-    // 1. Maturity Index (0.1 to 1.0)
-    let maturityIndex = totalScore / MAX_SCORE;
-    if (maturityIndex < 0.1) maturityIndex = 0.1;
+    // Show loading screen first
+    setStep(AppStep.CALCULATING);
 
-    // 2. Projections
-    const potentialRevenue = hardData.annualRevenue / maturityIndex;
-    const revenueGap = potentialRevenue - hardData.annualRevenue;
+    // Perform calculation after a small delay to ensure loading screen is rendered
+    setTimeout(() => {
+      // Calculation Engine (Business Logic)
 
-    // 3. Profit Analysis
-    const currentProfit = hardData.annualRevenue * (hardData.profitMargin / 100);
-    const profitGap = revenueGap * (hardData.profitMargin / 100);
-    const potentialProfit = currentProfit + profitGap;
+      // 1. Maturity Index (0.1 to 1.0)
+      let maturityIndex = totalScore / MAX_SCORE;
+      if (maturityIndex < 0.1) maturityIndex = 0.1;
 
-    const calculationResult: CalculationResult = {
-      user: {
-        name: hardData.name,
-        company: hardData.companyName
-      },
-      scoreDetails: {
-        rawScore: totalScore,
-        maxPossible: MAX_SCORE,
-        maturityIndex: maturityIndex,
-        maturityPercentage: `${Math.round(maturityIndex * 100)}%`
-      },
-      financialAnalysis: {
-        inputs: {
-          reportedRevenue: hardData.annualRevenue,
-          reportedMargin: hardData.profitMargin
+      // 2. Projections
+      const potentialRevenue = hardData.annualRevenue / maturityIndex;
+      const revenueGap = potentialRevenue - hardData.annualRevenue;
+
+      // 3. Profit Analysis
+      const currentProfit = hardData.annualRevenue * (hardData.profitMargin / 100);
+      const profitGap = revenueGap * (hardData.profitMargin / 100);
+      const potentialProfit = currentProfit + profitGap;
+
+      const calculationResult: CalculationResult = {
+        user: {
+          name: hardData.name,
+          company: hardData.companyName
         },
-        projections: {
-          potentialRevenue,
-          potentialProfit
+        scoreDetails: {
+          rawScore: totalScore,
+          maxPossible: MAX_SCORE,
+          maturityIndex: maturityIndex,
+          maturityPercentage: `${Math.round(maturityIndex * 100)}%`
         },
-        opportunityCost: {
-          moneyOnTableRevenue: revenueGap,
-          moneyOnTableProfit: profitGap
+        financialAnalysis: {
+          inputs: {
+            reportedRevenue: hardData.annualRevenue,
+            reportedMargin: hardData.profitMargin
+          },
+          projections: {
+            potentialRevenue,
+            potentialProfit
+          },
+          opportunityCost: {
+            moneyOnTableRevenue: revenueGap,
+            moneyOnTableProfit: profitGap
+          }
         }
-      }
-    };
+      };
 
-    setResult(calculationResult);
-    setStep(AppStep.RESULTS);
+      setResult(calculationResult);
+      setStep(AppStep.RESULTS);
+    }, 0);
   };
 
   return (
@@ -74,15 +81,19 @@ const App: React.FC = () => {
       {step === AppStep.WELCOME && (
         <WelcomeScreen onStart={startApp} />
       )}
-      
+
       {step === AppStep.HARD_DATA && (
         <HardDataForm onSubmit={handleHardDataSubmit} />
       )}
-      
+
       {step === AppStep.QUESTIONNAIRE && (
         <Questionnaire onComplete={handleQuestionnaireComplete} />
       )}
-      
+
+      {step === AppStep.CALCULATING && (
+        <LoadingScreen onComplete={() => {}} duration={5000} />
+      )}
+
       {step === AppStep.RESULTS && result && (
         <ResultsScreen data={result} />
       )}

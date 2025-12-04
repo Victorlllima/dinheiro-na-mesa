@@ -50,6 +50,7 @@ export enum AppStep {
   WELCOME = 'WELCOME',
   HARD_DATA = 'HARD_DATA',
   QUESTIONNAIRE = 'QUESTIONNAIRE',
+  CALCULATING = 'CALCULATING',
   LEAD_GEN = 'LEAD_GEN', // Optional based on PRD, combining with Results logic if needed
   RESULTS = 'RESULTS'
 }
